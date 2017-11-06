@@ -43,7 +43,29 @@ class KNearestNeighbor(object):
 
         You should return the digit label provided by the algorithm
         '''
-        digit = None
+        dist = self.l2_distance(test_point)
+        labeled_dist = np.zeros(7000,dtype={'names':('labels','dist'), 'formats':('int8','f4')})
+        labeled_dist['labels']= self.train_labels
+        labeled_dist['dist'] = dist
+        labeled_dist = np.sort(labeled_dist,order='dist')
+     #   print(labeled_dist[0])
+        if k == 1:
+            digit = labeled_dist['labels'][0]     
+            return(digit)
+        top_k_lab = labeled_dist['labels'][0:k]
+     #   print(top_k_lab)    
+        if k == 1:
+            digit = labeled_dist['labels':0]        
+        unique_counts = np.asarray(np.unique(top_k_lab,return_counts=True))
+      #  unique_counts = np.sort(unique_counts.T,axis=1)
+        print(unique_counts)
+        print(np.ndarray.flatten(np.argwhere(unique_counts[1,:] == np.amax(unique_counts[1,:]))))
+        top_counts = unique_counts[:,np.random.choice(np.ndarray.flatten(np.argwhere(unique_counts[1,:] == np.amax(unique_counts[1,:]))),size=1)]
+       # print(top_counts.shape)
+        print(top_counts)
+     #   if top_counts.shape[0] > 1:
+            
+        digit = top_counts[0]
         return digit
 
 def cross_validation(train_data, train_labels, k_range=np.arange(1,16)):
@@ -65,14 +87,36 @@ def classification_accuracy(knn, k, eval_data, eval_labels):
     Evaluate the classification accuracy of knn on the given 'eval_data'
     using the labels
     '''
-    pass
+    predicted_labels=knn_classify(knn,eval_data,k)
+    pred_truth = np.zeros(predicted_labels.shape[0],dtype={'names':('predicted','truth'),'formats':('int8','int8')})
+    pred_truth['predicted'] = predicted_labels
+    pred_truth['truth']= eval_labels
+    print(pred_truth.shape)
+    correct = pred_truth[pred_truth['predicted'] == pred_truth['truth']]
+    return(correct.shape[0]/pred_truth.shape[0])
+
+def knn_classify(knn,test_data,k):
+    predicted_labels=np.zeros(test_data.shape[0])
+    for i in np.arange(0,test_data.shape[0]-1):
+        predicted_labels[i]=knn.query_knn(test_data[i],k)
+    return(predicted_labels)
 
 def main():
     train_data, train_labels, test_data, test_labels = data.load_all_data('data')
     knn = KNearestNeighbor(train_data, train_labels)
-
+    np.random.seed()
     # Example usage:
-    predicted_label = knn.query_knn(test_data[0], 1)
+    predicted_label = knn.query_knn(test_data[0], 2)
+    print("predicted_label:",predicted_label)
+    predicted_label = knn.query_knn(test_data[9], 2)
+    print("predicted_label:",predicted_label)
+ #   accuracy_test_k1 = classification_accuracy(knn,1,test_data,test_labels)
+   # accuracy_train_k1 = classification_accuracy(knn,1,train_data,train_labels)
+    #accuracy_test_k15 = classification_accuracy(knn,15,test_data,test_labels)
+    #accuracy_train_k15 = classification_accuracy(knn,15,train_data,train_labels)
+    #print("test k1:", accuracy_test_k1, "train k1:", accuracy_train_k1, "test k15:", accuracy_test_k15, "train k15:", accuracy_train_k15)
+
+  #  print(predicted_labels[1:5])
 
 if __name__ == '__main__':
     main()
