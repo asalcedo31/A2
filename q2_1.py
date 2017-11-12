@@ -9,6 +9,7 @@ import numpy as np
 # Import pyplot - plt.imshow is useful!
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
+import pandas as pd
 
 class KNearestNeighbor(object):
     '''
@@ -43,6 +44,7 @@ class KNearestNeighbor(object):
         Query a single test point using the k-NN algorithm
 
         You should return the digit label provided by the algorithm
+        self 
         '''
         dist = self.l2_distance(test_point)
         labeled_dist = np.zeros(self.train_labels.shape[0],dtype={'names':('labels','dist'), 'formats':('int8','f4')})
@@ -84,18 +86,23 @@ def cross_validation(train_data, train_labels, k_range=np.arange(1,16),folds=10)
         x_f_train, x_f_test = train_data[train_index], train_data[test_index]
         y_f_train, y_f_test = train_labels[train_index], train_labels[test_index]
         knn_f = KNearestNeighbor(x_f_train, y_f_train)
+        print("running fold ", f)
         for k in k_range:
             k_acc[k-1,f-1]=classification_accuracy(knn_f,k,x_f_test,y_f_test)
         f +=1
         # Loop over folds
         # Evaluate k-NN
         # ...
-    print(k_acc)
+   # print(k_acc)
     k_acc_mean = np.mean(k_acc,axis=0)
-    print(k_acc_mean)
-    print(np.argmin(k_acc_mean))
+#    print(k_acc)
+   # print(np.argmin(k_acc_mean))
     best_k = np.argmin(k_acc_mean)+1
-    print(best_k)
+    print("best k", best_k)
+    acc_df = pd.DataFrame({'k': k_range, 'Accuracy':k_acc_mean})
+    acc_df = acc_df[['k','Accuracy']]
+    acc_df_tex = acc_df.to_latex(index=False)
+    print(acc_df_tex)
     return(best_k)
 
 def classification_accuracy(knn, k, eval_data, eval_labels):
@@ -107,7 +114,7 @@ def classification_accuracy(knn, k, eval_data, eval_labels):
     pred_truth = np.zeros(predicted_labels.shape[0],dtype={'names':('predicted','truth'),'formats':('int8','int8')})
     pred_truth['predicted'] = predicted_labels
     pred_truth['truth']= eval_labels
-    print(pred_truth.shape)
+   # print(pred_truth.shape)
     correct = pred_truth[pred_truth['predicted'] == pred_truth['truth']]
     return(correct.shape[0]/pred_truth.shape[0])
 
@@ -120,17 +127,18 @@ def knn_classify(knn,test_data,k):
 def main():
     train_data, train_labels, test_data, test_labels = data.load_all_data('data')
     knn = KNearestNeighbor(train_data, train_labels)
-    np.random.seed()
+  #  np.random.seed()
     # Example usage:
     predicted_label = knn.query_knn(test_data[0], 2)
     print("predicted_label:",predicted_label)
     predicted_label = knn.query_knn(test_data[9], 2)
-    print("predicted_label:",predicted_label)
-  #  accuracy_test_k1 = classification_accuracy(knn,1,test_data,test_labels)
-  #  accuracy_train_k1 = classification_accuracy(knn,1,train_data,train_labels)
-  #  accuracy_test_k15 = classification_accuracy(knn,15,test_data,test_labels)
-  #  accuracy_train_k15 = classification_accuracy(knn,15,train_data,train_labels)
-  #  print("test k1:", accuracy_test_k1, "train k1:", accuracy_train_k1, "test k15:", accuracy_test_k15, "train k15:", accuracy_train_k15)
+   # print("predicted_label:",predicted_label)
+   # accuracy_test_k1 = classification_accuracy(knn,1,test_data,test_labels)
+   # accuracy_train_k1 = classification_accuracy(knn,1,train_data,train_labels)
+   # accuracy_test_k15 = classification_accuracy(knn,15,test_data,test_labels)
+   # accuracy_train_k15 = classification_accuracy(knn,15,train_data,train_labels)
+   # print("test k1:", accuracy_test_k1, "train k1:", accuracy_train_k1, "test k15:", accuracy_test_k15, "train k15:", accuracy_train_k15)
+   
     best_k = cross_validation(train_data,train_labels,np.arange(1,3),2)
     accuracy_test_best = classification_accuracy(knn,best_k,test_data,test_labels)
     accuracy_train_best = classification_accuracy(knn,best_k,train_data,train_labels)
