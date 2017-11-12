@@ -204,16 +204,16 @@ def main():
     plot_cov_diagonal(covariances)
     #get the average training and testing likelihoods for the correct class
     avg_train = avg_conditional_likelihood(train_data,train_labels,means,covariances)
-    print("average training log conditional likelihood", avg_train, "average training conditional likelihood", np.exp(avg_train) )
-    avg_test = np.exp(avg_conditional_likelihood(test_data,test_labels,means,covariances))
-    print("average testing conditional likelihood", avg_test, "average testing conditional likelihood", np.exp(avg_test))
+    print("average training  conditional log likelihood", avg_train, "average training conditional likelihood", np.exp(avg_train) )
+    avg_test = avg_conditional_likelihood(test_data,test_labels,means,covariances)
+    print("average testing conditional log likelihood", avg_test, "average testing conditional likelihood", np.exp(avg_test))
     #Predict training labels and compute accuracy
     pred_train = classify_data(train_data,means,covariances)
     acc_train = classification_accuracy(pred_train,train_labels)
     #Predict testing labels and compute accuracy
     pred_test = classify_data(test_data,means,covariances)
     acc_test = classification_accuracy(pred_test,test_labels)
-    print("train: ", acc_train, "test: ", acc_test)
+    print("training accuracy: ", acc_train, "testing accuract: ", acc_test)
 
 
 if __name__ == '__main__':
