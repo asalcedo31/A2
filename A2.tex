@@ -20,9 +20,10 @@
 \usepackage{float}
 \usepackage{bbm}
 \usepackage[space]{grffile}
+\usepackage[section]{placeins}
 \usepackage[justification=justified,singlelinecheck=false]{caption}
 
-
+\captionsetup[figure]{labelformat=empty}
 
 \newcommand{\bs}[1]{\bm{\mathrm{#1}}} % always use this custom command when you want to use boldface font in a math (equation, $__$ etc.) environment.
 \newcommand{\switch}[0]{\mathbbm{1}\{y_k=k\}}
@@ -171,9 +172,18 @@ Setting the derivative with respect to $\sigma^2_{i}$  to zero
  \begin{equation*}
 \sigma_i = \frac{\sum^N_n\switch(x_i-\mu_{ki})^2}{\sum^N_n\switch}
  \end{equation*}
- 
+ \
  \section{}
-   \addtocounter{subsection}{1}
+ 
+  \subsubsection{}
+  \begin{figure}[!h]
+  \centering
+  \caption{}{ Means for each feature for each class}
+   \includegraphics[width=0.6\textwidth, trim={3in 0in 0in 0in},clip=true ]{q0_means.png}
+\end{figure}
+\FloatBarrier
+
+\subsection{}
  \subsubsection{}
  K=1 train accuracy: 0.9998, test accuracy: 0.9685 \\
  K=15 train accuracy: 0.9596 test accuracy: 0.958\\
@@ -192,7 +202,7 @@ Setting the derivative with respect to $\sigma^2_{i}$  to zero
  
  $\bs{x}_i$ is a d x 1 vector of the features for one observation and $\mu_{ki}$ is a d x 1 vector of the means of the features for class $k$. y is a N x 1 vector of responses for each observation indicating the class
  \begin{equation*}
-  \ell(\bs{x} | \bs{\mu},\sigma_k) = p(\bs{x}|y=k, \bs{\mu}_k,\Sigma)p(y=k)
+  \ell(\bs{x},\bs{y}| \bs{\mu},\Sigma) = p(\bs{x}|y=k, \bs{\mu}_k,\Sigma)p(y=k)
  \end{equation*}
 Applying the log
 
@@ -254,13 +264,97 @@ To solve for the covariance
    \Sigma_{k} = \frac{\switch \sum^N_{i=1}\switch{}(\bs{x}_i-\bs{\mu}_k)(\bs{x}_i -\bs{\mu}_k)^T }{\sum^N_{i=1}\switch}
   \end{equation*}
   
-   
+   \clearpage
   
-  \subsubsection{}
-  
-  \subsubsection{}
-  Training average conditional log likelihood: -0.1264
-  Testing average conditional log likelihood: 
- 
+  \subsubsection{}{}
+  \begin{figure}[!h]
+  \centering
+  \caption{}{  Covariance matrix diagonals (variances) for each featutre}
+   \includegraphics[width=0.6\textwidth, trim={3in 0in 0in 0in},clip=true ]{q2_2_eta.png}
+\end{figure}
+\FloatBarrier
 
+  \subsubsection{}
+  Training average conditional log likelihood: -0.1264 \\
+  Testing average conditional log likelihood: -0.1995\\
+  \subsubsection{}
+  Training accuracy: 0.98\\
+  Testing accuracy: 0.97
+ \subsection{}
+ 
+  \addtocounter{subsubsection}{1}
+ \subsubsection{}
+ To get the MLE :
+ 
+ \begin{equation*}
+  \ell(\bs{x},\bs{y} | \bs{\eta}) = p(\bs{x} | \bs{\eta}_k, y_k=k)p(y_k = k)p{\bs{\eta}_k}
+ \end{equation*}
+
+Incorporate the prior on  $eta$ into the training data by adding a case of all positive and a case of all negative features to the training set.\\
+For each class k: 
+
+ \begin{equation*}
+ =\prod^N_{i=1}\prod^d_{j=1}\switch(\eta_{jk})^{b_j}(1-\eta_{jk})^{(1-{b_j})}\frac{1}{10}
+ \end{equation*}
+Taking the log 
+
+
+ \begin{equation*}
+ =\sum^N_{i=1}\sum^d_{j=1}{b_j}\switch\big\{\log{(\eta_{jk})}+ (1-{b_j})\log{(1-\eta_{jk})} + \log{\frac{1}{10}}\big\}
+ \end{equation*}
+
+Taking the derivative w.r.t. $\eta_{jk}$ and setting it to zero
+\begin{equation*}
+0 = \sum^N_{i=1}\switch\big\{b_j\frac{1}{\eta_{jk}} + (1-{b_j})\frac{1}{(1-\eta_{jk})}(-1)\big\}
+\end{equation*}
+
+\begin{equation*}
+0 = \sum^N_{i=1}\switch\big\{\frac{b_j}{\eta_{jk}} -\frac{1}{(1-\eta_{jk})} +  \frac{b_j}{(1-\eta_{jk})}\big\}
+\end{equation*}
+
+\begin{equation*}
+0 = \sum^N_{i=1}\switch\big\{\frac{b_j}{\eta_{jk}} -\frac{1- b_j}{(1-\eta_{jk})}\big\}
+\end{equation*}
+
+\begin{equation*}
+0 = \sum^N_{i=1}\switch\big\{{b_j}(1-\eta_{jk}) - \eta_{jk}(1-b_j)\big\}
+\end{equation*}
+
+\begin{equation*}
+0 = \sum^N_{i=1}\switch\big\{b_j-b_j\eta_{jk} - \eta_{jk} + b_j\eta_{jk}\big\}
+\end{equation*}
+
+\begin{equation*}
+\sum^N_{i=1}\switch\eta_{jk} = \sum^N_{i=1}\switch{}b_j
+\end{equation*}
+
+
+\begin{equation*}
+\eta_{jk} = \frac{\sum^N_{i=1}\switch{}b_j}{\sum^N_{i=1}\switch}
+\end{equation*}
+
+\subsubsection{}
+ \begin{figure}[!h]
+  \centering
+  \caption{}{  $eta$ for each class}
+   \includegraphics[width=0.6\textwidth, trim={3in 0in 0in 0in},clip=true ]{q2_3_eta.png}
+\end{figure}
+\FloatBarrier
+
+
+
+\subsubsection{}
+ \begin{figure}[!h]
+  \centering
+  \caption{}{ New data point }
+   \includegraphics[width=0.6\textwidth, trim={3in 0in 0in 0in},clip=true ]{q2_3_new.png}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{}
+ Training average conditional log likelihood: -0.9437 \\
+  Testing average conditional log likelihood: -0.9872\\
+  \subsubsection{}
+  Training accuracy: 0.77\\
+  Testing accuracy: 0.76
 \end{document}
