@@ -27,26 +27,28 @@ def compute_parameters(train_data, train_labels):
 
     You should return a numpy array of shape (10, 64)
     where the ith row corresponds to the ith digit class.
+    train data is a n x 64 numpy array of observations
+    train labels is a n x 1 numpy array of their class labels
     '''
-    print(train_data.shape)
     eta = np.zeros((10, 64))
-    print(train_data.shape)
+    #train on one class at a time
     for k in np.unique(train_labels):
         k = int(k)
-        print(k)#np.unique((train_labels)):
+        # get observations in each class and their labels
         lab_class, data_class = obs_in_class(train_data,train_labels,k)
+        #add one row of positive cases and one row of negative cases as the prior on eta
         data_class = np.append(data_class,np.zeros((1,64)),axis=0)
         data_class = np.append(data_class,np.ones((1,64)),axis=0)
-        print(data_class.shape)
+        #compute the sum of positive values for each feature in class k
         lab_sum = np.sum(data_class,axis=0)
-        print("lab_sum:", lab_sum.shape,lab_sum)
         class_obs = data_class.shape[0]
         eta[k-1,:] = lab_sum/class_obs
     return eta
 
-def plot_images(class_images):
+def plot_images(class_images,filename):
     '''
     Plot each of the images corresponding to each class side by side in grayscale
+    images is a 10 x 8 x 8 numpy array
     '''
     img_all = np.zeros((10,8,8))
     for i in range(10):
@@ -54,8 +56,9 @@ def plot_images(class_images):
         img_i = img_i.reshape(8,8)
         img_all[i] = img_i
     allconcat = np.concatenate(img_all,1)
+    plt.figure(figsize=(20, 5))
     plt.imshow(allconcat,cmap='gray')
-    plt.show()
+    plt.savefig(filename)
         # ...
 
 def generate_new_data(eta):
@@ -63,49 +66,51 @@ def generate_new_data(eta):
     Sample a new data point from your generative distribution p(x|y,theta) for
     each value of y in the range 0...10
 
-    Plot these values
+   eta is a 10 x 64 numpy array giving the chance of a positive trial for each feature in each class from compute_parameters
     '''
     generated_data = np.zeros((10, 64))
     for k in range(10):
         new_point = np.zeros((1,64))
         for d in range(eta.shape[1]):
+            #sample one point from a binomial with probability eta
             new_point[0,d] = np.random.binomial(1,eta[k,d])
-   #         print(new_point,new_point.shape)
         generated_data[k,:] = new_point
-    plot_images(generated_data)
+    #plot the resulting images
+    plot_images(generated_data,'q2_3_new.png')
 
-def generative_likelihood(bin_digits, eta,lab):
+def generative_likelihood(bin_digits, eta):
     '''
     Compute the generative log-likelihood:
         log p(x|y, eta)
 
-    Should return an n x 10 numpy array 
+    Should return an n x 10 numpy array
+    bin_digits is a n x 64 numpy array of binarized features
+    eta is a 10 x 64 numpy array giving the chance of a positive trial for each feature in each class from compute_parameters
+
     '''
     prob_samp = np.zeros((bin_digits.shape[0],10))
-  #  prob_samp = np.zeros((12,10))
+  #  iterate over samples
     for i in range(bin_digits.shape[0]):
-     #   print(lab[i])
         prob_k = np.zeros((1,10))
+   #   iterate over classes
         for k in range(10):
             t1_k = np.zeros((64))
             t2_k = np.zeros((64))
+            #iterate over each feature
             for d in range(64):
                 bin_d = bin_digits[i,d]
                 eta_d = eta[k,d]
                 t1_k[d] = bin_d*np.log(eta_d/(1-eta_d))
                 t2_k[d] = np.log(1-eta_d)
+            #sum over features and then sum terms for each class
             t1_k_sum = np.sum(t1_k)
             t2_k_sum = np.sum(t2_k)
             prob_k[0,k] = t1_k_sum + t2_k_sum
-      #  print(prob_k)
-     #   print(np.exp(prob_k))
         prob_samp[i,:] = prob_k
-      #  print("pred ", np.argmax(prob_k)+1)
-    
-    #print("sum ", prob_samp.shape)
+  
     return prob_samp
 
-def conditional_likelihood(bin_digits, eta, labels=None):
+def conditional_likelihood(bin_digits, eta):
     '''
     Compute the conditional likelihood:
 
@@ -113,17 +118,19 @@ def conditional_likelihood(bin_digits, eta, labels=None):
 
     This should be a numpy array of shape (n, 10)
     Where n is the number of datapoints and 10 corresponds to each digit class
+    bin_digits is a n x 64 numpy array of binarized features
+    eta is a 10 x 64 numpy array giving the chance of a positive trial for each feature in each class from compute_parameters
+
     '''
     cond_lik = np.zeros((bin_digits.shape[0],10))
-    gen_lik = generative_likelihood(bin_digits,eta,labels)
+    gen_lik = generative_likelihood(bin_digits,eta)
     prior = np.log(1/10)
+    #sum the likelihoods for all classes times the prior to compute the evidence
     evidence = np.sum(np.exp(gen_lik)*np.exp(prior),axis=1)
     evidence_mat = np.repeat(evidence,10,axis=0)
     evidence_mat = evidence_mat.reshape(bin_digits.shape[0],10)
     out = (gen_lik +prior) - np.log(evidence_mat)
-  #  print("ev", evidence_mat.shape, evidence)
-  #  print("out", out.shape,out)
-    
+ 
     return out
 
 def right_class(x,k):
@@ -139,41 +146,53 @@ def avg_conditional_likelihood(bin_digits, eta, labels):
         AVG( log p(y_i|x_i, eta) )
 
     i.e. the average log likelihood that the model assigns to the correct class label
+    bin_digits is a n x 64 numpy array of binarized features
+    eta is a 10 x 64 numpy array giving the chance of a positive trial for each feature in each class from compute_parameters
+    labels is an n x 1 vector of labels for observations in bin_digits
     '''
-    cond_likelihood = conditional_likelihood(bin_digits, eta,labels)
+    #obtain posterior likelihoods for each observation
+    cond_likelihood = conditional_likelihood(bin_digits, eta)
     right_cond_lik = np.zeros((bin_digits.shape[0]))
+    #only sum the posterior likelihoods from the correct class
     for i in range(bin_digits.shape[0]):
         right_cond_lik[i] = right_class(cond_likelihood[i,:],labels[i])
+    #average and return
     right_cond_sum = np.sum(right_cond_lik)
     right_cond_mean = right_cond_sum/bin_digits.shape[0]
-    print("average coditional likelihood ", right_cond_mean, np.exp(right_cond_mean))
-    # Compute as described above and return
-    return None
+    return right_cond_mean
+
 def best_class (x):
+#pick out the class with the highest posterior likelihood
     best_k = np.argmax(x)+1
     if (best_k == 10):
         best_k = 0
     return(best_k)
 
 def classification_accuracy(predicted_labels,eval_labels):
+    '''
+    computes accuracy given a set of prediced labels and truth labels
+    predicted_labels is an n x 1 vector of predictions
+    eval_labels is an n x 1 vector of true labels against which to evaluate the predictors
+    '''
+    # Combine predicted and evaluation into a single array
     pred_truth = np.zeros(predicted_labels.shape[0],dtype={'names':('predicted','truth'),'formats':('int8','int8')})
     pred_truth['predicted'] = predicted_labels
     pred_truth['truth']= eval_labels
-    print(pred_truth[0:3])
+    #count the rows where the predicted matches the truth
     correct = pred_truth[pred_truth['predicted'] == pred_truth['truth']]
     return(correct.shape[0]/pred_truth.shape[0])
 
-def classify_data(bin_digits, eta,labels):
+def classify_data(bin_digits, eta):
     '''
     Classify new points by taking the most likely posterior class
+    eta is a 10 x 64 numpy array giving the chance of a positive trial for each feature in each class from compute_parameters
+means is a 10 x 64 numpy array
+    bin_digits is a n by 64 numpy array
     '''
-    cond_likelihood = conditional_likelihood(bin_digits, eta,labels)
-    print(cond_likelihood.shape)
+    # Compute posterior likelihood and return the most likely class
+    cond_likelihood = conditional_likelihood(bin_digits, eta)
     pred = np.apply_along_axis(best_class, 1 , cond_likelihood)
-    print(pred[0:10])
-    print(labels[0:10])
-    print(pred.shape)
-    # Compute and return the most likely class
+   
     return(pred)
 
 def main():
@@ -182,20 +201,17 @@ def main():
 
     # Fit the model
     eta = compute_parameters(train_data, train_labels)
-    test_img = train_data[0,:]
-    test_image = test_img.reshape(8,8)
-    plt.imshow(test_image, cmap='gray')
-    plt.show()
-    # Evaluation
- #   plot_images(eta)
-  #  plot_images(train_data[0:3,:])
+    plot_images(eta,'q2_3_eta.png')
+   #generate new data
     generate_new_data(eta)
-   # generative_likelihood(train_data,eta,train_labels)
-    avg_conditional_likelihood(train_data,eta,train_labels)
-    avg_conditional_likelihood(test_data,eta,test_labels)
-    pred_train = classify_data(train_data,eta,train_labels)
+   # Evaluate model
+    avg_train = avg_conditional_likelihood(train_data,eta,train_labels)
+    print("average training  conditional log likelihood", avg_train, "average training conditional likelihood", np.exp(avg_train) )
+    avg_test = avg_conditional_likelihood(test_data,eta,test_labels)
+    print("average testing conditional log likelihood", avg_test, "average testing conditional likelihood", np.exp(avg_test))
+    pred_train = classify_data(train_data,eta)
     acc_train = classification_accuracy(pred_train,train_labels)
-    pred_test = classify_data(test_data,eta,test_labels)
+    pred_test = classify_data(test_data,eta)
     acc_test = classification_accuracy(pred_test,test_labels)
     print("acc train", acc_train, "acc test", acc_test)
 if __name__ == '__main__':
