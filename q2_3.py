@@ -121,8 +121,8 @@ def conditional_likelihood(bin_digits, eta, labels=None):
     evidence_mat = np.repeat(evidence,10,axis=0)
     evidence_mat = evidence_mat.reshape(bin_digits.shape[0],10)
     out = (gen_lik +prior) - np.log(evidence_mat)
-    print("ev", evidence_mat.shape, evidence)
-    print("out", out.shape,out)
+  #  print("ev", evidence_mat.shape, evidence)
+  #  print("out", out.shape,out)
     
     return out
 
@@ -192,10 +192,11 @@ def main():
     generate_new_data(eta)
    # generative_likelihood(train_data,eta,train_labels)
     avg_conditional_likelihood(train_data,eta,train_labels)
- #   pred_train = classify_data(train_data,eta,train_labels)
- #   acc_train = classification_accuracy(pred_train,train_labels)
- #   pred_test = classify_data(test_data,eta,test_labels)
- #   acc_test = classification_accuracy(pred_test,test_labels)
+    avg_conditional_likelihood(test_data,eta,test_labels)
+    pred_train = classify_data(train_data,eta,train_labels)
+    acc_train = classification_accuracy(pred_train,train_labels)
+    pred_test = classify_data(test_data,eta,test_labels)
+    acc_test = classification_accuracy(pred_test,test_labels)
     print("acc train", acc_train, "acc test", acc_test)
 if __name__ == '__main__':
     main()
