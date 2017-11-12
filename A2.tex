@@ -53,7 +53,7 @@
 
 %=====================
 
-\title{\Large Assignment 1}
+\title{\Large Assignment 2}
 \author{\large Adriana Salcedo}
 \date{\large \today}
 
@@ -93,37 +93,37 @@ For each class $k$
 
 
 \begin{equation*}
-\prod^N_{n=1}\mathbbm{1}\{t_k=k\}(2\pi\bs{\sigma}^T\bs{\sigma})^{-\frac{1}{2}}exp\{-\frac{1}{2\bs{\sigma}^T\bs{\sigma}}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T\}\bs{\alpha}_k
+\prod^N_{n=1}\switch(2\pi\bs{\sigma}^T\bs{\sigma})^{-\frac{1}{2}}exp\{-\frac{1}{2\bs{\sigma}^T\bs{\sigma}}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T\}\bs{\alpha}_k
 \end{equation*}
 
 Apply negative log
 
 \begin{equation*}
-= -\sum^N_n\switch\log{p(\bs{x}_n|y_n=k,\bs{\mu_k},\bs{\sigma})}-\switch\log{\alpha_k}
+= -\sum^N_i\switch\log{p(\bs{x}_n|y_n=k,\bs{\mu_k},\bs{\sigma})}-\switch\log{\alpha_k}
 \end{equation*}
 
 \begin{equation*}
- = -\sum^N_n\switch\log{(2\pi\bs{\sigma}^T\bs{\sigma})^{-\frac{1}{2}}} + \switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T-\switch\log{\bs{\alpha}_k}
+ = -\sum^N_i\switch\log{(2\pi\bs{\sigma}^T\bs{\sigma})^{-\frac{1}{2}}} + \switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T-\switch\log{\bs{\alpha}_k}
 \end{equation*}
 
 \begin{equation*}
- =\sum^N_n\switch\frac{1}{2}\log{(2\pi\bs{\sigma}^T\bs{\sigma})}+ \sum^N_n\switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}(\bs{x}_n\bs{x}^T_n-2\bs{x}_n\bs{\mu}_k^T+\bs{\mu}_k\bs{\mu}_k^T)-\switch\log{\bs{\alpha}_k}
+ =\sum^N_i\switch\frac{1}{2}\log{(2\pi\bs{\sigma}^T\bs{\sigma})}+ \sum^N_i\switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}(\bs{x}_n\bs{x}^T_n-2\bs{x}_n\bs{\mu}_k^T+\bs{\mu}_k\bs{\mu}_k^T)-\switch\log{\bs{\alpha}_k}
 \end{equation*}
 
 Taking the derivative with respect to $\mu_{ki}$ 
 
 \begin{equation*}
-  \sum^N_n\switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}(-2x_{ki}+2\mu_{ki})
+  \sum^N_i\switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}(-2x_{ki}+2\mu_{ki})
 \end{equation*}
 
 Taking the derivative with respect to $\sigma_{ki}$ 
 
 \begin{equation*}
-=\sum^N_n\switch\frac{1}{2}\frac{1}{(2\pi\bs{\sigma}^T\bs{\sigma})}2\pi - \sum^N_n\switch\frac{1}{2}(\bs{\sigma}^T\bs{\sigma})^{-2}(\bs{x}_n\bs{x}^T_n-2\bs{x}_n\bs{\mu}_k^T+\bs{\mu}_k\bs{\mu}_k^T)
+=\sum^N_i\switch\frac{1}{2}\frac{1}{(2\pi\bs{\sigma}^T\bs{\sigma})}2\pi - \sum^N_i\switch\frac{1}{2}(\bs{\sigma}^T\bs{\sigma})^{-2}(\bs{x}_n\bs{x}^T_n-2\bs{x}_n\bs{\mu}_k^T+\bs{\mu}_k\bs{\mu}_k^T)
  \end{equation*}
 
 \begin{equation*}
-=\sum^N_n\switch\frac{1}{2}\frac{1}{(\bs{\sigma}^T\bs{\sigma})} - \sum^N_n\switch\frac{1}{2}(\bs{\sigma}^T\bs{\sigma})^{-2}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T
+=\sum^N_i\switch\frac{1}{2}\frac{1}{(\bs{\sigma}^T\bs{\sigma})} - \sum^N_i\switch\frac{1}{2}(\bs{\sigma}^T\bs{\sigma})^{-2}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T
  \end{equation*}
  
 \subsection{}
@@ -131,46 +131,46 @@ Taking the derivative with respect to $\sigma_{ki}$
 Setting the derivative with respect to $\mu_{ki}$  to zero
 
 \begin{equation*}
- 0 = \sum^N_n\switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}2x_{ki} + \sum^N_n\switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}2\mu_{ki}
+ 0 = \sum^N_i\switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}2x_{ki} + \sum^N_i\switch\frac{1}{2\bs{\sigma}^T\bs{\sigma}}2\mu_{ki}
 \end{equation*}
 
 \begin{equation*}
-\sum^N_n\switch\frac{1}{\bs{\sigma}^T\bs{\sigma}}\mu_{ki} = \sum^N_n\switch\frac{1}{\bs{\sigma}^T\bs{\sigma}}x_{ki} 
+\sum^N_i\switch\frac{1}{\bs{\sigma}^T\bs{\sigma}}\mu_{ki} = \sum^N_i\switch\frac{1}{\bs{\sigma}^T\bs{\sigma}}x_{ki} 
 \end{equation*}
 
 \begin{equation*}
- \mu_{ki} = \frac{ \sum^N_n\switch{}x_{ki} }{\sum^N_n\switch}
+ \mu_{ki} = \frac{ \sum^N_i\switch{}x_{ki} }{\sum^N_i\switch}
 \end{equation*}
 
 
 For for feature i=1 to i=d, and for each class k =1 to k = k
 \begin{equation*}
-\bs{\mu}_k = \begin{bmatrix} \frac{ \sum^N_n\switch{}x_{k=1,i=1} }{\sum^N_n\switch} & \frac{ \sum^N_n\switch{}x_{k=1,i=2} }{\sum^N_n\switch} & ... & \frac{ \sum^N_n\switch{}x_{k=1, i=d} }{\sum^N_n\switch}\\  \frac{ \sum^N_n\switch{}x_{k=2,i=1} }{\sum^N_n\switch} & \frac{ \sum^N_n\switch{}x_{k=2,i=2} }{\sum^N_n\switch} & ... & \frac{ \sum^N_n\switch{}x_{k=2, i=d} }{\sum^N_n\switch} \\ ... \\  \frac{ \sum^N_n\switch{}x_{k=k,i=1} }{\sum^N_n\switch} & \frac{ \sum^N_n\switch{}x_{k=k,i=2} }{\sum^N_n\switch} & ... & \frac{ \sum^N_n\switch{}x_{k=k, i=d} }{\sum^N_n\switch} \end{bmatrix}
+\bs{\mu}_k = \begin{bmatrix} \frac{ \sum^N_i\switch{}x_{k=1,i=1} }{\sum^N_i\switch} & \frac{ \sum^N_i\switch{}x_{k=1,i=2} }{\sum^N_i\switch} & ... & \frac{ \sum^N_i\switch{}x_{k=1, i=d} }{\sum^N_i\switch}\\  \frac{ \sum^N_i\switch{}x_{k=2,i=1} }{\sum^N_i\switch} & \frac{ \sum^N_i\switch{}x_{k=2,i=2} }{\sum^N_i\switch} & ... & \frac{ \sum^N_i\switch{}x_{k=2, i=d} }{\sum^N_i\switch} \\ ... \\  \frac{ \sum^N_i\switch{}x_{k=k,i=1} }{\sum^N_i\switch} & \frac{ \sum^N_i\switch{}x_{k=k,i=2} }{\sum^N_i\switch} & ... & \frac{ \sum^N_i\switch{}x_{k=k, i=d} }{\sum^N_i\switch} \end{bmatrix}
 \end{equation*}
 
 \clearpage
 Setting the derivative with respect to $\sigma^2_{i}$  to zero
 
 \begin{equation*}
-0 =\sum^N_n\switch\frac{1}{2}\frac{1}{(\bs{\sigma}^T\bs{\sigma})} - \sum^N_n\switch\frac{1}{2}(\bs{\sigma}^T\bs{\sigma})^{-2}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T
+0 =\sum^N_i\switch\frac{1}{2}\frac{1}{(\bs{\sigma}^T\bs{\sigma})} - \sum^N_i\switch\frac{1}{2}(\bs{\sigma}^T\bs{\sigma})^{-2}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T
  \end{equation*}
  
  
  \begin{equation*}
-\sum^N_n\switch\frac{1}{2}\frac{1}{(\bs{\sigma}^T\bs{\sigma})}  = \sum^N_n\switch\frac{1}{2}\frac{1}{\bs{\sigma}^T\bs{\sigma}^2}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T
+\sum^N_i\switch\frac{1}{2}\frac{1}{(\bs{\sigma}^T\bs{\sigma})}  = \sum^N_i\switch\frac{1}{2}\frac{1}{\bs{\sigma}^T\bs{\sigma}^2}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T
  \end{equation*}
  
   \begin{equation*}
-\sum^N_n\switch  = \sum^N_n\switch\frac{1}{\bs{\sigma}^T\bs{\sigma}}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T
+\sum^N_i\switch  = \sum^N_i\switch\frac{1}{\bs{\sigma}^T\bs{\sigma}}(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T
  \end{equation*}
  
    \begin{equation*}
-\bs{\sigma}^T\bs{\sigma} = \frac{\sum^N_n\switch(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T}{\sum^N_n\switch}
+\bs{\sigma}^T\bs{\sigma} = \frac{\sum^N_i\switch(\bs{x}-\bs{\mu}_k)(\bs{x}-\bs{\mu}_k)^T}{\sum^N_i\switch}
  \end{equation*}
  
  For each feature i
  \begin{equation*}
-\sigma_i = \frac{\sum^N_n\switch(x_i-\mu_{ki})^2}{\sum^N_n\switch}
+\sigma^2_i = \frac{\sum^N_i\switch(x_i-\mu_{ki})^2}{\sum^N_i\switch}
  \end{equation*}
  \
  \section{}
@@ -185,17 +185,39 @@ Setting the derivative with respect to $\sigma^2_{i}$  to zero
 
 \subsection{}
  \subsubsection{}
- K=1 train accuracy: 0.9998, test accuracy: 0.9685 \\
- K=15 train accuracy: 0.9596 test accuracy: 0.958\\
+ K=1 train accuracy: 0.9998, test accuracy: 0.967 \\
+ K=15 train accuracy: 0.957 test accuracy: 0.9512\\
  
  \subsubsection {}
  
- I chose to break ties by randomly selecting a class from among the tied classes. I chose this approach as it gave each of the each of the classes tied for the most votes an equal chance of being selected, allowed the algorithm to use the same k for every point, did not exclude any test points, and always gave a class for each test point (ie there were no cases where a class was undefined). 
+ I chose to break ties by randomly selecting a class from among the tied classes. I chose this approach as it gave each of the classes tied for the most votes an equal chance of being selected, allowed the algorithm to use close to the same k for every point (as opposed to using k=1 when there are ties, or dropping k until the tie is broken), did not exclude any test points, and always gave a class for each test point (ie there were no cases where a class was undefined). 
  
  \subsubsection{}
  
- The optimal k was 2. train accuracy: 0.9817, test accuracy: 0.9617
+ The optimal k was 3. train accuracy: 0.9825, test accuracy: 0.9645
  
+ \begin{tabular}{rr}
+\toprule
+  k &  Accuracy \\
+\midrule
+  1 &  0.959714\\
+  2 &   0.948571\\
+  3 &  0.961857\\
+  4 &  0.956857\\
+  5 &  0.957571 \\
+  6 &  0.952143 \\
+  7 &  0.953857 \\
+  8 & 0.949571 \\
+  9 &  0.948714 \\
+ 10 &  0.946429\\
+ 11 &  0.946143 \\
+ 12 &  0.944286\\
+ 13 & 0.943857 \\
+ 14 &  0.942857 \\
+ 15 & 0.942143\\
+\bottomrule
+\end{tabular}
+
  \subsection{}
  
  MLE estimates for $\mu_k$ and $\Sigma_k$
@@ -269,7 +291,7 @@ To solve for the covariance
   \subsubsection{}{}
   \begin{figure}[!h]
   \centering
-  \caption{}{  Covariance matrix diagonals (variances) for each featutre}
+  \caption{}{  Covariance matrix diagonals (variances) for each feature}
    \includegraphics[width=0.6\textwidth, trim={3in 0in 0in 0in},clip=true ]{q2_2_eta.png}
 \end{figure}
 \FloatBarrier
@@ -290,7 +312,7 @@ To solve for the covariance
   \ell(\bs{x},\bs{y} | \bs{\eta}) = p(\bs{x} | \bs{\eta}_k, y_k=k)p(y_k = k)p{\bs{\eta}_k}
  \end{equation*}
 
-Incorporate the prior on  $eta$ into the training data by adding a case of all positive and a case of all negative features to the training set.\\
+Incorporate the prior on  $\eta$ into the training data by adding a case of all positive and a case of all negative features to the training set.\\
 For each class k: 
 
  \begin{equation*}
@@ -336,7 +358,7 @@ Taking the derivative w.r.t. $\eta_{jk}$ and setting it to zero
 \subsubsection{}
  \begin{figure}[!h]
   \centering
-  \caption{}{  $eta$ for each class}
+  \caption{}{  $\eta$ for each class}
    \includegraphics[width=0.6\textwidth, trim={3in 0in 0in 0in},clip=true ]{q2_3_eta.png}
 \end{figure}
 \FloatBarrier
@@ -357,4 +379,8 @@ Taking the derivative w.r.t. $\eta_{jk}$ and setting it to zero
   \subsubsection{}
   Training accuracy: 0.77\\
   Testing accuracy: 0.76
+ 
+ \subsection{}
+ All models performed quite well with the Gaussian Bayes classifier achieving the highest accuracy, and Naive Bayes the poorest. The optimal KNN classifier (k=1) achieved extremely high training accuracy, but accuracy dropped substantially on the testing data, indicative of some overfitting. KNN likely performed well because it is non-parametric and allowed for complex decision boundaries, even though it assumed features were uncorrelated. Its performance was probably limited by the high number of features relative to the number of observations, which gave optimal performance with a small k leading to some overfitting. The Gaussian Bayes classifier had very similar performance for the testing and training data indicating there was likely less overfitting. It probably performed well because it accounted for the correlations among features which were likely strong when features are adjacent pixels from images of handwritten digits. Its assumption that classes follow a multivariate Gaussian was likely justified in the MNIST dataset, and its quadratic decision boundaries allowed for more flexibility relative to a linear decision boundary. Naive Bayes also had similar performance for training and testing indicating there was little overfitting, but overall performance was poor. Poor performance was likely due to the assumption that features are uncorrelated was strongly violated in this dataset. Assuming linear decision boundaries  likely further limited performance. Generally, the observed results make sense given the properties and assumptions of each algorithm, 
+ 
 \end{document}
